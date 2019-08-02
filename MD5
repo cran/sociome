@@ -1,8 +1,8 @@
-ccca45e43082a1900077ae8382fbe1a9 *DESCRIPTION
+fe85541645f53f86039bd44e9e044a8f *DESCRIPTION
 203bc83c09fcb42aacaa822fb287c3b0 *LICENSE
 60a1ad4ad9ee64c5827fef7fd8d115c9 *NAMESPACE
-82d7baeb525f3e5732b24555821effe5 *NEWS.md
-9d7f24b6f1cbd07e2b6daaed5e89bd5b *R/calculate_adi.R
+d3094c888868bf154e830c5a121b87b4 *NEWS.md
+6ff9344d9664c9cc057619c247dbbaf0 *R/calculate_adi.R
 81b23b9d0efb46d70c1a97323f6b9a2b *R/census_api_key.R
 b5ef4ea680b5e882496545ec653ef365 *R/data_documentation.R
 f903ed90972b672e68658cbb0b45f6fa *R/get_adi.R
