@@ -35,7 +35,8 @@ test_get_adi_arg_tibble <- function(geography,
 }
 
 
-testvars_acs2015 <- c("B15003_001", "B15003_002", "B15003_003", "B15003_004",
+testvars_acs2015 <- c("B11005_001",
+                      "B15003_001", "B15003_002", "B15003_003", "B15003_004",
                       "B15003_005", "B15003_006", "B15003_007", "B15003_008",
                       "B15003_009", "B15003_010", "B15003_011", "B15003_012",
                       "B15003_017", "B15003_018", "B15003_019", "B15003_020",
@@ -55,7 +56,7 @@ test_geoids <-
   c("01", "11", "39035", "39089", "09001010101", "09001010500", "090159025001")
 
 
-test_that("tibble for geoids", {
+test_that("call tibble for geoids is correct", {
   
   expect_identical(
     test_get_adi_arg_tibble(
@@ -73,6 +74,8 @@ test_that("tibble for geoids", {
       year = 2015,
       survey = "acs5",
       output = "tidy",
+      keep_geo_vars = FALSE,
+      endyear = list(NULL),
       geography = list("state"),
       geometry = list(FALSE),
       shift_geo = list(FALSE),
@@ -98,6 +101,8 @@ test_that("tibble for geoids", {
       year = 2015,
       survey = "acs5",
       output = "tidy",
+      keep_geo_vars = FALSE,
+      endyear = list(NULL),
       geography = list("county"),
       geometry = list(FALSE),
       shift_geo = list(FALSE),
@@ -125,17 +130,19 @@ test_that("tibble for geoids", {
       year = 2015,
       survey = "acs5",
       output = "tidy",
+      keep_geo_vars = FALSE,
+      endyear = list(NULL),
       geography = list("tract"),
       geometry = list(FALSE),
       shift_geo = list(FALSE),
       cache_table = list(FALSE),
       key = list(NULL),
-      state = c("39", "39", "09", "09", rep("01", 67L), "11"),
+      state = c(rep("01", 67L), "09", "09", "11", "39", "39"),
       county =
-        c("035", "089",
+        c("001", "003", "005", "007", "009", "011", "013", "015", "017", "019", "021", "023", "025", "027", "029", "031", "033", "035", "037", "039", "041", "043", "045", "047", "049", "051", "053", "055", "057", "059", "061", "063", "065", "067", "069", "071", "073", "075", "077", "079", "081", "083", "085", "087", "089", "091", "093", "095", "097", "099", "101", "103", "105", "107", "109", "111", "113", "115", "117", "119", "121", "123", "125", "127", "129", "131", "133",
           "001", "015",
-          "001", "003", "005", "007", "009", "011", "013", "015", "017", "019", "021", "023", "025", "027", "029", "031", "033", "035", "037", "039", "041", "043", "045", "047", "049", "051", "053", "055", "057", "059", "061", "063", "065", "067", "069", "071", "073", "075", "077", "079", "081", "083", "085", "087", "089", "091", "093", "095", "097", "099", "101", "103", "105", "107", "109", "111", "113", "115", "117", "119", "121", "123", "125", "127", "129", "131", "133",
-          "001")
+          "001",
+          "035", "089")
     )
   )
   
@@ -155,17 +162,19 @@ test_that("tibble for geoids", {
       year = 2015,
       survey = "acs5",
       output = "tidy",
+      keep_geo_vars = FALSE,
+      endyear = list(NULL),
       geography = list("block group"),
       geometry = list(FALSE),
       shift_geo = list(FALSE),
       cache_table = list(FALSE),
       key = list(NULL),
-      state = c("39", "39", "09", "09", rep("01", 67L), "11"),
+      state = c(rep("01", 67L), "09", "09", "11", "39", "39"),
       county =
-        c("035", "089",
+        c("001", "003", "005", "007", "009", "011", "013", "015", "017", "019", "021", "023", "025", "027", "029", "031", "033", "035", "037", "039", "041", "043", "045", "047", "049", "051", "053", "055", "057", "059", "061", "063", "065", "067", "069", "071", "073", "075", "077", "079", "081", "083", "085", "087", "089", "091", "093", "095", "097", "099", "101", "103", "105", "107", "109", "111", "113", "115", "117", "119", "121", "123", "125", "127", "129", "131", "133",
           "001", "015",
-          "001", "003", "005", "007", "009", "011", "013", "015", "017", "019", "021", "023", "025", "027", "029", "031", "033", "035", "037", "039", "041", "043", "045", "047", "049", "051", "053", "055", "057", "059", "061", "063", "065", "067", "069", "071", "073", "075", "077", "079", "081", "083", "085", "087", "089", "091", "093", "095", "097", "099", "101", "103", "105", "107", "109", "111", "113", "115", "117", "119", "121", "123", "125", "127", "129", "131", "133",
-          "001")
+          "001",
+          "035", "089")
     )
   )
 })
@@ -173,7 +182,7 @@ test_that("tibble for geoids", {
 
 
 
-test_that("tibble for state only", {
+test_that("call tibble for states only is correct", {
   
   expect_identical(
     test_get_adi_arg_tibble(
@@ -191,6 +200,8 @@ test_that("tibble for state only", {
       year = 2015,
       survey = "acs5",
       output = "tidy",
+      keep_geo_vars = FALSE,
+      endyear = list(NULL),
       geography = list("state"),
       geometry = list(FALSE),
       shift_geo = list(FALSE),
@@ -217,6 +228,8 @@ test_that("tibble for state only", {
       year = 2015,
       survey = "acs5",
       output = "tidy",
+      keep_geo_vars = FALSE,
+      endyear = list(NULL),
       geography = list("county"),
       geometry = list(FALSE),
       shift_geo = list(FALSE),
@@ -247,6 +260,8 @@ test_that("tibble for state only", {
       year = 2015,
       survey = "acs5",
       output = "tidy",
+      keep_geo_vars = FALSE,
+      endyear = list(NULL),
       geography = list("tract"),
       geometry = list(FALSE),
       shift_geo = list(FALSE),
@@ -274,6 +289,8 @@ test_that("tibble for state only", {
       year = 2015,
       survey = "acs5",
       output = "tidy",
+      keep_geo_vars = FALSE,
+      endyear = list(NULL),
       geography = list("block group"),
       geometry = list(FALSE),
       shift_geo = list(FALSE),
@@ -289,7 +306,7 @@ test_that("tibble for state only", {
 
 
 
-test_that("tibble for one state and multiple counties", {
+test_that("call tibble for one state and multiple counties is correct", {
   
   expect_identical(
     test_get_adi_arg_tibble(
@@ -298,7 +315,7 @@ test_that("tibble for one state and multiple counties", {
       year = 2015,
       geoid = NULL,
       state = "oh",
-      county = c("cuyahoga", "erie", "lake", "franklin"),
+      county = c("cuyahoga", "erie", "franklin", "lake"),
       zcta = NULL
     ),
     tibble::tibble(
@@ -307,13 +324,15 @@ test_that("tibble for one state and multiple counties", {
       year = 2015,
       survey = "acs5",
       output = "tidy",
+      keep_geo_vars = FALSE,
+      endyear = list(NULL),
       geography = list("state"),
       geometry = list(FALSE),
       shift_geo = list(FALSE),
       cache_table = list(FALSE),
       key = list(NULL),
       state = list("oh"),
-      county = list(c("cuyahoga", "erie", "lake", "franklin"))
+      county = list(c("cuyahoga", "erie", "franklin", "lake"))
     )
   )
   
@@ -324,7 +343,7 @@ test_that("tibble for one state and multiple counties", {
       year = 2015,
       geoid = NULL,
       state = "oh",
-      county = c("cuyahoga", "erie", "lake", "franklin"),
+      county = c("cuyahoga", "erie", "franklin", "lake"),
       zcta = NULL
     ),
     tibble::tibble(
@@ -333,13 +352,15 @@ test_that("tibble for one state and multiple counties", {
       year = 2015,
       survey = "acs5",
       output = "tidy",
+      keep_geo_vars = FALSE,
+      endyear = list(NULL),
       geography = list("county"),
       geometry = list(FALSE),
       shift_geo = list(FALSE),
       cache_table = list(FALSE),
       key = list(NULL),
       state = list("oh"),
-      county = list(c("cuyahoga", "erie", "lake", "franklin"))
+      county = list(c("cuyahoga", "erie", "franklin", "lake"))
     )
   )
   
@@ -350,7 +371,7 @@ test_that("tibble for one state and multiple counties", {
       year = 2015,
       geoid = NULL,
       state = "oh",
-      county = c("cuyahoga", "erie", "lake", "franklin"),
+      county = c("cuyahoga", "erie", "franklin", "lake"),
       zcta = NULL
     ),
     tibble::tibble(
@@ -359,13 +380,15 @@ test_that("tibble for one state and multiple counties", {
       year = 2015,
       survey = "acs5",
       output = "tidy",
+      keep_geo_vars = FALSE,
+      endyear = list(NULL),
       geography = list("tract"),
       geometry = list(FALSE),
       shift_geo = list(FALSE),
       cache_table = list(FALSE),
       key = list(NULL),
       state = rep("oh", 4),
-      county = c("cuyahoga", "erie", "lake", "franklin")
+      county = c("cuyahoga", "erie", "franklin", "lake")
     )
   )
   
@@ -377,7 +400,7 @@ test_that("tibble for one state and multiple counties", {
       year = 2015,
       geoid = NULL,
       state = "oh",
-      county = c("cuyahoga", "erie", "lake", "franklin"),
+      county = c("cuyahoga", "erie", "franklin", "lake"),
       zcta = NULL
     ),
     tibble::tibble(
@@ -386,13 +409,15 @@ test_that("tibble for one state and multiple counties", {
       year = 2015,
       survey = "acs5",
       output = "tidy",
+      keep_geo_vars = FALSE,
+      endyear = list(NULL),
       geography = list("block group"),
       geometry = list(FALSE),
       shift_geo = list(FALSE),
       cache_table = list(FALSE),
       key = list(NULL),
       state = rep("oh", 4),
-      county = c("cuyahoga", "erie", "lake", "franklin"),
+      county = c("cuyahoga", "erie", "franklin", "lake"),
     )
   )
   

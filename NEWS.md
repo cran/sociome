@@ -1,3 +1,24 @@
+
+# sociome 1.2.0
+
+## Major updates:
+- Adapted to tidyr's breaking changes
+
+## Minor updates:
+- Added progress messages for the get_adi() calls that require many calls to tidycensus functions.
+- Code improvements.
+
+# sociome 1.1.0
+
+## Major updates:
+- Households that have zero households are now excluded from ADI calculation
+
+
+## Minor updates:
+- Updated README and documentation
+- Added more tests
+
+
 # sociome 1.0.2
 
 ## Minor updates:

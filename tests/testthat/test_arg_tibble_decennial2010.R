@@ -1,4 +1,4 @@
-context("Test validate_location for 2010 decennial")
+context("Test get_adi() calls for 2010 decennial")
 
 test_get_adi_arg_tibble <- function(geography,
                                     dataset,
@@ -46,7 +46,7 @@ vars2010 <-
   list(sociome::acs_vars %>% dplyr::filter(.data$decennial2010) %>% dplyr::pull("variable"))
 
 
-test_that("tibble for geoids", {
+test_that("call tibble for geoids is correct", {
   
   expect_identical(
     test_get_adi_arg_tibble(
@@ -64,6 +64,8 @@ test_that("tibble for geoids", {
       sumfile = list("sf1", NULL),
       year = 2010,
       output = "tidy",
+      keep_geo_vars = FALSE,
+      endyear = list(NULL),
       geography = list("state"),
       geometry = list(FALSE),
       shift_geo = list(FALSE),
@@ -89,6 +91,8 @@ test_that("tibble for geoids", {
       sumfile = list("sf1", NULL),
       year = 2010,
       output = "tidy",
+      keep_geo_vars = FALSE,
+      endyear = list(NULL),
       geography = list("county"),
       geometry = list(FALSE),
       shift_geo = list(FALSE),
@@ -114,12 +118,14 @@ test_that("tibble for geoids", {
       sumfile = c(rep("sf1", 4L), rep(list(NULL), 4L)),
       year = 2010,
       output = "tidy",
+      keep_geo_vars = FALSE,
+      endyear = list(NULL),
       geography = list("tract"),
       geometry = list(FALSE),
       shift_geo = list(FALSE),
       cache_table = list(FALSE),
       key = list(NULL),
-      state = c("01", "11", "39", "09", "01", "11", "39", "09")
+      state = c("01", "09" , "11", "39", "01", "09" , "11", "39")
     )
   )
   
@@ -146,6 +152,8 @@ test_that("tibble for geoids", {
       sumfile = c(rep("sf1", 72L), rep(list(NULL), 72L)),
       year = 2010,
       output = "tidy",
+      keep_geo_vars = FALSE,
+      endyear = list(NULL),
       geography = list("block group"),
       geometry = list(FALSE),
       shift_geo = list(FALSE),
@@ -177,7 +185,7 @@ test_that("tibble for geoids", {
 
 
 
-test_that("tibble for state only", {
+test_that("call tibble for state only is correct", {
 
   expect_identical(
     test_get_adi_arg_tibble(
@@ -195,6 +203,8 @@ test_that("tibble for state only", {
       sumfile = list("sf1", NULL),
       year = 2010,
       output = "tidy",
+      keep_geo_vars = FALSE,
+      endyear = list(NULL),
       geography = list("state"),
       geometry = list(FALSE),
       shift_geo = list(FALSE),
@@ -221,6 +231,8 @@ test_that("tibble for state only", {
       sumfile = list("sf1", NULL),
       year = 2010,
       output = "tidy",
+      keep_geo_vars = FALSE,
+      endyear = list(NULL),
       geography = list("county"),
       geometry = list(FALSE),
       shift_geo = list(FALSE),
@@ -247,12 +259,14 @@ test_that("tibble for state only", {
       sumfile = c(rep("sf1", 3L), rep(list(NULL), 3L)),
       year = 2010,
       output = "tidy",
+      keep_geo_vars = FALSE,
+      endyear = list(NULL),
       geography = list("tract"),
       geometry = list(FALSE),
       shift_geo = list(FALSE),
       cache_table = list(FALSE),
       key = list(NULL),
-      state = rep(c("de", "dc", "ct"), 2L)
+      state = c("ct", "dc", "de", "ct", "dc", "de")
     )
   )
   
@@ -277,6 +291,8 @@ test_that("tibble for state only", {
       sumfile = c(rep("sf1", 12L), rep(list(NULL), 12L)),
       year = 2010,
       output = "tidy",
+      keep_geo_vars = FALSE,
+      endyear = list(NULL),
       geography = list("block group"),
       geometry = list(FALSE),
       shift_geo = list(FALSE),
@@ -301,7 +317,7 @@ test_that("tibble for state only", {
 
 
 
-test_that("tibble for one state and multiple counties", {
+test_that("call tibble for one state and multiple counties is correct", {
 
   expect_identical(
     test_get_adi_arg_tibble(
@@ -310,7 +326,7 @@ test_that("tibble for one state and multiple counties", {
       year = 2010,
       geoid = NULL,
       state = "oh",
-      county = c("cuyahoga", "erie", "lake", "franklin"),
+      county = c("cuyahoga", "erie", "franklin", "lake"),
       zcta = NULL
     ),
     tibble::tibble(
@@ -319,13 +335,15 @@ test_that("tibble for one state and multiple counties", {
       sumfile = list("sf1", NULL),
       year = 2010,
       output = "tidy",
+      keep_geo_vars = FALSE,
+      endyear = list(NULL),
       geography = list("state"),
       geometry = list(FALSE),
       shift_geo = list(FALSE),
       cache_table = list(FALSE),
       key = list(NULL),
       state = list("oh"),
-      county = list(c("cuyahoga", "erie", "lake", "franklin"))
+      county = list(c("cuyahoga", "erie", "franklin", "lake"))
     )
   )
 
@@ -336,7 +354,7 @@ test_that("tibble for one state and multiple counties", {
       year = 2010,
       geoid = NULL,
       state = "oh",
-      county = c("cuyahoga", "erie", "lake", "franklin"),
+      county = c("cuyahoga", "erie", "franklin", "lake"),
       zcta = NULL
     ),
     tibble::tibble(
@@ -345,13 +363,15 @@ test_that("tibble for one state and multiple counties", {
       sumfile = list("sf1", NULL),
       year = 2010,
       output = "tidy",
+      keep_geo_vars = FALSE,
+      endyear = list(NULL),
       geography = list("county"),
       geometry = list(FALSE),
       shift_geo = list(FALSE),
       cache_table = list(FALSE),
       key = list(NULL),
       state = list("oh"),
-      county = list(c("cuyahoga", "erie", "lake", "franklin"))
+      county = list(c("cuyahoga", "erie", "franklin", "lake"))
     )
   )
 
@@ -362,7 +382,7 @@ test_that("tibble for one state and multiple counties", {
       year = 2010,
       geoid = NULL,
       state = "oh",
-      county = c("cuyahoga", "erie", "lake", "franklin"),
+      county = c("cuyahoga", "erie", "franklin", "lake"),
       zcta = NULL
     ),
     tibble::tibble(
@@ -371,6 +391,8 @@ test_that("tibble for one state and multiple counties", {
       sumfile = c(rep("sf1", 4L), rep(list(NULL), 4L)),
       year = 2010,
       output = "tidy",
+      keep_geo_vars = FALSE,
+      endyear = list(NULL),
       geography = list("tract"),
       geometry = list(FALSE),
       shift_geo = list(FALSE),
@@ -378,10 +400,8 @@ test_that("tibble for one state and multiple counties", {
       key = list(NULL),
       state = rep("oh", 8L),
       county =
-        rep(
-          c("cuyahoga", "erie", "lake", "franklin"),
-          2L
-        )
+        c("cuyahoga", "erie", "franklin", "lake",
+          "cuyahoga", "erie", "franklin", "lake")
     )
   )
 
@@ -393,7 +413,7 @@ test_that("tibble for one state and multiple counties", {
       year = 2010,
       geoid = NULL,
       state = "oh",
-      county = c("cuyahoga", "erie", "lake", "franklin"),
+      county = c("cuyahoga", "erie", "franklin", "lake"),
       zcta = NULL
     ),
     tibble::tibble(
@@ -402,6 +422,8 @@ test_that("tibble for one state and multiple counties", {
       sumfile = c(rep("sf1", 4L), rep(list(NULL), 4L)),
       year = 2010,
       output = "tidy",
+      keep_geo_vars = FALSE,
+      endyear = list(NULL),
       geography = list("block group"),
       geometry = list(FALSE),
       shift_geo = list(FALSE),
@@ -409,10 +431,8 @@ test_that("tibble for one state and multiple counties", {
       key = list(NULL),
       state = rep("oh", 8L),
       county =
-        rep(
-          c("cuyahoga", "erie", "lake", "franklin"),
-          2L
-        )
+        c("cuyahoga", "erie", "franklin", "lake",
+          "cuyahoga", "erie", "franklin", "lake")
     )
   )
 
