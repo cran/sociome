@@ -1,11 +1,11 @@
-7aca130dec3df1c5f472d7f36970bfdc *DESCRIPTION
+073315e24f87e07237eb1d71fa030336 *DESCRIPTION
 203bc83c09fcb42aacaa822fb287c3b0 *LICENSE
-e7ceeb01dfc173bdc0f3057f6e8a5ee9 *NAMESPACE
-ce51209555dae1e5820c5d3c6c05ae72 *NEWS.md
+60a1ad4ad9ee64c5827fef7fd8d115c9 *NAMESPACE
+00207c3b259d62875f177ea591971306 *NEWS.md
 b289a9b6cdaef0bc6ca7c235ad88fd06 *R/calculate_adi.R
 81b23b9d0efb46d70c1a97323f6b9a2b *R/census_api_key.R
 13ef5a5aaf2f24df54abff56e7c02ee2 *R/data_documentation.R
-f7233c31fe84644fa0d923e46cdd53e5 *R/get_adi.R
+3ce069de039d5f8d84b3225831e5d1a2 *R/get_adi.R
 1829615b85468303157a83249254edac *R/get_geoids.R
 28e5dfcd641e392869e427f56eda3714 *R/setup.R
 773977e9a587a224209feb864e4bab33 *R/sysdata.rda
@@ -18,7 +18,7 @@ bf62cf7711de4bbb01828fa975985110 *inst/extdata/census_variables_dataset_creator.
 9e092020f0525a1d6eab8210ac82b846 *man/calculate_adi.Rd
 c2ed3b72edb0789a1c49c000716a2af7 *man/census_api_key.Rd
 854b2dc40075cb271e178b8d0fd030df *man/decennial_vars.Rd
-8e7256bd7b1faed7a29d61dc0c30cd89 *man/get_adi.Rd
+b726beae96831424828317d56692245d *man/get_adi.Rd
 da6e5c90b4aa78b66b599f2e659f1446 *man/get_geoids.Rd
 1f7896a1b866ff9ae89ba35be7c7b6f1 *man/pipe.Rd
 7da2af870462b88cca0915c830d377a1 *tests/testthat.R
