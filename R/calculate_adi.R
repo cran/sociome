@@ -3,57 +3,54 @@
 #' Calculate the Area Deprivation Index and Berg Indices (ADI-3) using decennial
 #' US census or American Community Survey (ACS) variables.
 #'
-#' The function \code{\link{get_adi}()} calls this function by default as its
-#' final step, but some users may want to calculate ADI and ADI-3 values for
-#' different combinations of areas in a given data set.
-#' \code{\link{get_adi}(raw_data_only = TRUE)} returns the raw census data used
-#' to calculate ADI and ADI-3. Users may select subsets of such a data set and
-#' pipe them into \code{calculate_adi()}.
+#' The function [get_adi()] calls this function by default as its final step,
+#' but some users may want to calculate ADI and ADI-3 values for different
+#' combinations of areas in a given data set. [`get_adi`]`(raw_data_only =
+#' TRUE)` returns the raw census data used to calculate ADI and ADI-3. Users may
+#' select subsets of such a data set and pipe them into `calculate_adi()`.
 #'
-#' This function discerns what kind of census data that \code{data} contains
-#' (ACS, or one of the decennial censuses) by checking for the existence of key
-#' variables unique to each kind of data set.
+#' This function discerns what kind of census data that `data` contains (ACS, or
+#' one of the decennial censuses) by checking for the existence of key variables
+#' unique to each kind of data set.
 #'
 #' Areas listed as having zero households are excluded from ADI and ADI-3
-#' calculation. Their resulting ADIs and ADI-3s will be \code{NA}.
+#' calculation. Their resulting ADIs and ADI-3s will be `NA`.
 #'
-#' If calling this function directly (i.e., not via \code{get_adi()}) on a data
-#' set that contains median household income (B19013_001) and does not contain
+#' If calling this function directly (i.e., not via [get_adi()]) on a data set
+#' that contains median household income (B19013_001) and does not contain
 #' median family income (B19113_001), median household income will be used in
-#' place of median family income, with a \code{warning()}. See the "Missingness
-#' and imputation" section of \code{\link{get_adi}()}.
+#' place of median family income, with a `warning()`. See the "Missingness and
+#' imputation" section of [get_adi()].
 #'
-#' @seealso For more information, see \code{\link{get_adi}()}, especially
-#'   \strong{ADI and ADI-3 factor loadings} and \strong{Missingness and
-#'   imputation}.
+#' @seealso For more information, see [get_adi()], especially the sections
+#'   titled **ADI and ADI-3 factor loadings** and **Missingness and
+#'   imputation**.
 #'
-#' @param data_raw A data frame, \code{\link[tibble]{tibble}}, or
-#'   \code{\link[sf]{sf}} ultimately obtained via
-#'   \code{tidycensus::\link[tidycensus]{get_acs}()} or
-#'   \code{tidycensus::\link[tidycensus]{get_decennial}()}, having the data
-#'   necessary to compute the indicators of the ADI and ADI-3.
+#' @param data_raw A data frame, [`tibble`][tibble::tibble], or [`sf`][sf::sf]
+#'   object ultimately obtained via [tidycensus::get_acs()] or
+#'   [tidycensus::get_decennial()], having the data necessary to compute the
+#'   indicators of the ADI and ADI-3.
 #'
 #'   The columns of his data frame must be named according to the elements of
-#'   the \code{variable} column in \code{sociome::\link{acs_vars}} and/or
-#'   \code{sociome::decennial_vars}.
+#'   the `variable` column in [`acs_vars`] and/or [`decennial_vars`].
 #'
 #'   The easiest way to obtain data like this is to run
-#'   \code{sociome::\link{get_adi}(raw_data_only = TRUE)}.
+#'   [`get_adi`]`(raw_data_only = TRUE)`.
 #' @param keep_indicators Logical indicating whether or not to keep the
 #'   component indicators of the ADI and ADI-3 as well as the original census
-#'   variables used to calculate them. Defaults to \code{FALSE}.
+#'   variables used to calculate them. Defaults to `FALSE`.
 #'
-#'   See \code{\link{acs_vars}} and \code{\link{decennial_vars}} for basic
-#'   descriptions of the raw census variables.
+#'   See [`acs_vars`] and [`decennial_vars`] for basic descriptions of the raw
+#'   census variables.
 #'
-#' @param seed Passed to the \code{seed} argument of
-#'   \code{mice::\link[mice]{mice}()} when imputation is needed.
+#' @param seed Passed to the `seed` argument of [mice::mice()] when imputation
+#'   is needed.
 #'
-#' @return A \code{\link[tibble]{tibble}} with the same number of rows as
-#'   \code{data}. Columns include \code{GEOID}, \code{NAME}, \code{ADI},
-#'   \code{Financial Strength}, \code{Economic_Hardship_and_Inequality}, and
-#'   \code{Educational_Attainment}. Further columns containing the indicators
-#'   and raw values will also be present if \code{keep_indicators = TRUE}.
+#' @return A [`tibble`][tibble::tibble] (or [`sf`][sf::sf]) with the same number
+#'   of rows as `data`. Columns include `GEOID`, `NAME`, `ADI`, `Financial
+#'   Strength`, `Economic_Hardship_and_Inequality`, and
+#'   `Educational_Attainment`. Further columns containing the indicators and raw
+#'   values will also be present if `keep_indicators = TRUE`.
 #'
 #' @examples
 #' \dontrun{
@@ -163,27 +160,41 @@ calculate_adi <- function(data_raw, keep_indicators = FALSE, seed = NA) {
     purrr::map_dfc(
       list(
         ADI =
-          c("medianFamilyIncome"                            = -1,
-            "medianMortgage"                                = -1,
-            "medianRent"                                    = -1,
-            "medianHouseValue"                              = -1,
-            "pctFamiliesInPoverty"                          = +1,
-            "pctOwnerOccupiedHousing"                       = -1,
-            "ratioThoseMakingUnder10kToThoseMakingOver50k"  = +1,
-            "pctPeopleLivingBelow150PctFederalPovertyLevel" = +1,
-            "pctHouseholdsWithChildrenThatAreSingleParent"  = +1,
-            "pctHouseholdsWithNoVehicle"                    = +1,
-            "pctPeopleWithWhiteCollarJobs"                  = -1,
-            "pctPeopleUnemployed"                           = +1,
-            "pctPeopleWithAtLeastHSEducation"               = -1,
-            "pctPeopleWithLessThan9thGradeEducation"        = +1,
-            "pctHouseholdsWithOverOnePersonPerRoom"         = +1),
+          unlist(
+            rlang::list2(
+              # This is so we grab the correct one of
+              # medianFamilyIncome/medianHouseholdIncome, which we made sure
+              # would be the first column name in indicators_hh_only.
+              !!names(indicators_hh_only)[1L]                := -1,
+              "medianMortgage"                                = -1,
+              "medianRent"                                    = -1,
+              "medianHouseValue"                              = -1,
+              "pctFamiliesInPoverty"                          = +1,
+              "pctOwnerOccupiedHousing"                       = -1,
+              "ratioThoseMakingUnder10kToThoseMakingOver50k"  = +1,
+              "pctPeopleLivingBelow150PctFederalPovertyLevel" = +1,
+              "pctHouseholdsWithChildrenThatAreSingleParent"  = +1,
+              "pctHouseholdsWithNoVehicle"                    = +1,
+              "pctPeopleWithWhiteCollarJobs"                  = -1,
+              "pctPeopleUnemployed"                           = +1,
+              "pctPeopleWithAtLeastHSEducation"               = -1,
+              "pctPeopleWithLessThan9thGradeEducation"        = +1,
+              "pctHouseholdsWithOverOnePersonPerRoom"         = +1
+            )
+          ),
         Financial_Strength =
-          c("medianFamilyIncome"           = +1,
-            "medianMortgage"               = +1,
-            "medianRent"                   = +1,
-            "medianHouseValue"             = +1,
-            "pctPeopleWithWhiteCollarJobs" = +1),
+          unlist(
+            rlang::list2(
+              # This is so we grab the correct one of
+              # medianFamilyIncome/medianHouseholdIncome, which we made sure
+              # would be the first column name in indicators_hh_only.
+              !!names(indicators_hh_only)[1L] := +1,
+              "medianMortgage"                 = +1,
+              "medianRent"                     = +1,
+              "medianHouseValue"               = +1,
+              "pctPeopleWithWhiteCollarJobs"   = +1
+            )
+          ),
         Economic_Hardship_and_Inequality =
           c("pctFamiliesInPoverty"                          = +1,
             "pctOwnerOccupiedHousing"                       = -1,
@@ -197,50 +208,10 @@ calculate_adi <- function(data_raw, keep_indicators = FALSE, seed = NA) {
             "pctPeopleWithLessThan9thGradeEducation" = -1,
             "pctHouseholdsWithOverOnePersonPerRoom"  = -1)
       ),
-      function(expected_signs, result_vec) {
-        
-        # Principal-components analysis (PCA) of the statistics that produces
-        # the raw ADI and ADI-3 scores
-        fit <- psych::principal(indicators_hh_only[names(expected_signs)])
-        
-        # Sometimes the PCA produces results that are completely reversed (i.e.,
-        # it gives deprived areas low ADIs and less deprived areas high ADIs).
-        # A check is performed below to see if this has occurred.
-        
-        # 1. The signage of the factor loadings are multiplied by their expected
-        # signage according to Singh's original research (present in the unnamed
-        # vector of 1s and -1s below). This produces a vector of 1s and -1s,
-        # with a 1 indicating a factor loading in the expected direction and a
-        # -1 indicating a factor loading in the wrong direction.
-        
-        # 2. The sum() of this vector is computed.
-        
-        # 3. The sign() of this sum is computed and saved into a variable called
-        # "signage_flipper". It will equal 1 or -1. It will equal 1 if most of
-        # the factor loadings have the same sign as the original Singh factor
-        # loadings. It will be -1 if not. It will never equal 0 because there is
-        # an odd number of factor loadings.
-        signage_flipper <- sign(sum(sign(fit$loadings) * expected_signs))
-        #   4. The variable signage_flipper is multiplied by the PCA scores
-        #   before standardization. In effect, this flips the ADIs in the right
-        #   direction (multiplies their scores by -1) if they were reversed, and
-        #   it keeps them the same (multiplies their scores by 1) if they were
-        #   not reversed.
-        
-        # The raw ADI scores are standardized to have a mean of 100 and SD of 20
-        result_vec[nonzero_hh_lgl] <-
-          as.numeric(fit$scores * signage_flipper * 20 + 100)
-        
-        # We also want the loadings tables for each of the three factors
-        attr(result_vec, "loadings") <-
-          dplyr::tibble(
-            factor = row.names(fit$loadings),
-            loading = as.double(fit$loadings)
-          )
-        
-        result_vec
-      },
-      result_vec = rep_len(NA_real_, length.out = length(nonzero_hh_lgl))
+      calc_adi_col,
+      result_vec = rep_len(NA_real_, length.out = length(nonzero_hh_lgl)),
+      indicators_hh_only = indicators_hh_only,
+      nonzero_hh_lgl = nonzero_hh_lgl
     )
   
   out <-
@@ -261,6 +232,55 @@ calculate_adi <- function(data_raw, keep_indicators = FALSE, seed = NA) {
   class(out) <- c("adi", class(out))
   
   out
+}
+
+
+
+
+calc_adi_col <- function(expected_signs, 
+                         result_vec, 
+                         indicators_hh_only,
+                         nonzero_hh_lgl) {
+  # Principal-components analysis (PCA) of the statistics that produces
+  # the raw ADI and ADI-3 scores
+  fit <- psych::principal(indicators_hh_only[names(expected_signs)])
+  
+  # Sometimes the PCA produces results that are completely reversed (i.e.,
+  # it gives deprived areas low ADIs and less deprived areas high ADIs).
+  # A check is performed below to see if this has occurred.
+  
+  # 1. The signage of the factor loadings are multiplied by their expected
+  # signage according to Singh's original research (present in the unnamed
+  # vector of 1s and -1s below). This produces a vector of 1s and -1s,
+  # with a 1 indicating a factor loading in the expected direction and a
+  # -1 indicating a factor loading in the wrong direction.
+  
+  # 2. The sum() of this vector is computed.
+  
+  # 3. The sign() of this sum is computed and saved into a variable called
+  # "signage_flipper". It will equal 1 or -1. It will equal 1 if most of
+  # the factor loadings have the same sign as the original Singh factor
+  # loadings. It will be -1 if not. It will never equal 0 because there is
+  # an odd number of factor loadings.
+  signage_flipper <- sign(sum(sign(fit$loadings) * expected_signs))
+  #   4. The variable signage_flipper is multiplied by the PCA scores
+  #   before standardization. In effect, this flips the ADIs in the right
+  #   direction (multiplies their scores by -1) if they were reversed, and
+  #   it keeps them the same (multiplies their scores by 1) if they were
+  #   not reversed.
+  
+  # The raw ADI scores are standardized to have a mean of 100 and SD of 20
+  result_vec[nonzero_hh_lgl] <-
+    as.numeric(fit$scores * signage_flipper * 20 + 100)
+  
+  # We also want the loadings tables for each of the three factors
+  attr(result_vec, "loadings") <-
+    dplyr::tibble(
+      factor = row.names(fit$loadings),
+      loading = as.double(fit$loadings)
+    )
+  
+  result_vec
 }
 
 
@@ -481,6 +501,9 @@ factors_from_acs <- function(data_raw, colnames) {
     ) %>%
     
     dplyr::select(
+      # Make sure to keep median_income_name as the first one so that the
+      # medianFamilyIncome/medianHouseholdIncome check can be properly performed
+      # later on.
       !!median_income_name                           := "B19113_001",
       "medianMortgage"                                = "B25088_002",
       "medianRent"                                    = "B25064_001",
@@ -546,6 +569,9 @@ factors_from_2000_decennial <- function(data_raw) {
     ) %>%
     
     dplyr::select(
+      # Make sure to keep "medianFamilyIncome" as the first one so that the
+      # medianFamilyIncome/medianHouseholdIncome check can be properly performed
+      # later on.
       "medianFamilyIncome"                            = "P077001",
       "medianMortgage"                                = "H091001",
       "medianRent"                                    = "H063001",
@@ -615,6 +641,9 @@ factors_from_1990_decennial <- function(data_raw) {
     ) %>% 
     
     dplyr::select(
+      # Make sure to keep "medianFamilyIncome" as the first one so that the
+      # medianFamilyIncome/medianHouseholdIncome check can be properly performed
+      # later on.
       "medianFamilyIncome"                            = "P107A001",
       "medianMortgage"                                = "H052A001",
       "medianRent"                                    = "H043A001",
