@@ -1,0 +1,1 @@
+options(pillar.width = Inf)

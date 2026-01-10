@@ -5,7 +5,8 @@
 \title{Create a synthetic population simulating US Census areas}
 \usage{
 synthetic_population(
-  geography,
+  geography = c("state", "county", "tract", "block group", "block", "zcta",
+    "zip code tabulation area"),
   state = NULL,
   county = NULL,
   geoid = NULL,
@@ -17,7 +18,7 @@ synthetic_population(
   max_age = 115,
   rate = 0.25,
   key = NULL,
-  seed = NULL,
+  evaluator = purrr::insistently(eval, rate = purrr::rate_delay(), quiet = FALSE),
   ...
 )
 }
@@ -60,11 +61,12 @@ use.The data set used to calculate ADIs and ADI-3s.
 the 5-, 3-, and 1-year ACS along with the decennial census. Defaults to
 \code{"acs5"}.
 
-When \code{dataset = "decennial"}, \code{year} must be in \code{c(1990, 2000, 2010)}.
+When \code{dataset = "decennial"}, \code{year} must be in \code{c(2000, 2010, 2020)}.
 
 Important: data are not always available depending on the level of
 geography and data set chosen. See
-\url{https://www.census.gov/programs-surveys/acs/guidance/estimates.html}.}
+\url{https://www.census.gov/programs-surveys/acs/guidance/estimates.html} as
+well as \code{\link{dataset_year_geography_availability}}.}
 
 \item{geometry}{Logical value indicating whether or not shapefile data should
 be included in the result, making the result an \code{\link[sf:sf]{sf}} object
@@ -89,8 +91,8 @@ ages of the highest age bracket. Defaults to 0.25. See details.}
 \url{http://api.census.gov/data/key_signup.html}. Defaults to \code{NULL}. Not
 necessary if you have already loaded your key with \code{\link[=census_api_key]{census_api_key()}}.}
 
-\item{seed}{Passed onto \code{\link[=set.seed]{set.seed()}}, which is called before
-probabilistically synthesizing the age values with \code{\link[=sample]{sample()}}.}
+\item{evaluator}{A function that will evaluate the calls to the tidycensus
+functions. Defaults to \code{\link[purrr:insistently]{purrr::insistently}}\code{(}\code{\link{eval}}\verb{, rate = }\code{\link[purrr:rate-helpers]{purrr::rate_delay()}}\verb{, quiet = FALSE)}.}
 
 \item{...}{Additional arguments to be passed onto \code{\link[tidycensus:get_acs]{tidycensus::get_acs()}} or
 \code{\link[tidycensus:get_decennial]{tidycensus::get_decennial()}}. These must all be named. Must not match any
@@ -160,10 +162,10 @@ synthetic_population(
 # using 2000 Decennial Census data
 synthetic_population(
   geography = "tract",
-  geoid = 
+  geoid =
     # This two-digit GEOID is the state of Delaware.
     c("10",
-    
+
     # These five-digit GEOIDs are specific counties in Virginia and Maryland
       "51001", "51131", "24015", "24029", "24035", "24011", "24041", "24019",
       "24045", "24039", "24047"),
@@ -171,4 +173,8 @@ synthetic_population(
   dataset = "decennial"
 )
 }
+}
+\seealso{
+\code{\link{dataset_year_geography_availability}} for usable combinations of
+\code{dataset}, \code{year}, and \code{geography}.
 }
